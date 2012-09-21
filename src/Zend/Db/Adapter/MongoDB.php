@@ -33,6 +33,12 @@ class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
      */
     protected $_db;
 
+    /**
+     *
+     * @param array $config
+     *
+     * @return \Mongo
+     */
     public function __construct(array $config)
     {
         $this->_checkRequiredOptions($config);
@@ -79,15 +85,6 @@ class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
         return $this->_config['port'];
     }
 
-    public function getConnection()
-    {
-        if ($this->_connOptions["connect"] == FALSE) {
-            $this->_connection->connect();
-        }
-
-        return $this->_connection;
-    }
-
     public function setUpDatabase($db = null)
     {
         $conn = $this->getConnection();
@@ -106,7 +103,7 @@ class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
         return $this->_db;
     }
 
-    public function query($query)
+    public function query($query, $bind = array())
     {
         return $this->_db->execute($query);
     }
@@ -124,7 +121,7 @@ class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
         throw new Zend_Db_Adapter_MongoDB_Exception("MongoDB::{$fn} Method not found");
     }
 
-    protected function _checkRequiredOptions($config)
+    protected function _checkRequiredOptions(array $config)
     {
         if (!array_key_exists('dbname', $config)) {
             throw new Zend_Db_Adapter_MongoDB_Exception("Configuration array must have a key for 'dbname' that names the database instance");
@@ -145,59 +142,97 @@ class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
 
     /** Abstract methods implementations **/
 
+    /**
+     * Returns a list of the collections in the database.
+     *
+     * @return array
+     */
     public function listTables() {
-
+        return $this->_db->listCollections();
     }
 
+    /**
+     * @see self::listTables()
+     */
+    public function listCollections() {
+        return $this->listTables();
+    }
+
+    /**
+     * @todo improve
+     */
     public function describeTable($tableName, $schemaName = null) {
-
+        return array();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function _connect() {
-
+        if ($this->_connOptions["connect"] == FALSE) {
+            $this->_connection->connect();
+        }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function isConnected() {
-
+        return $this->_connection->connected;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function closeConnection() {
-
+        return $this->_connection->close();
     }
 
     public function prepare($sql) {
-
+        throw new Exception("Cannot prepare statements in MongoDB");
     }
 
     public function lastInsertId($tableName = null, $primaryKey = null) {
-
+        return null;
     }
 
     protected function _beginTransaction() {
-
+        throw new Exception("There are no transactions in MongoDB");
     }
 
     protected function _commit() {
-
+        throw new Exception("There are no commits(ie: transactions) in MongoDB");
     }
 
     protected function _rollBack() {
-
+        throw new Exception("There are no rollbacks(ie: transactions) in MongoDB");
     }
 
+    /**
+     * @todo improve
+     */
     public function setFetchMode($mode) {
 
     }
 
+    /**
+     * @todo improve
+     */
     public function limit($sql, $count, $offset = 0) {
 
     }
 
+    /**
+     * @todo improve
+     */
     public function supportsParameters($type) {
-
+        return false;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getServerVersion() {
-
+        return \Mongo::VERSION;
     }
 }
