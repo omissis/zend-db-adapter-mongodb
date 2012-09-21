@@ -8,7 +8,7 @@
  * You will need to read the API documentation for MongoDB and Mongo PHP objects because most of
  * the operations are used as is. *
  */
-class Zend_Db_Adapter_MongoDB
+class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
 {
     /**
      * @var array
@@ -141,5 +141,63 @@ class Zend_Db_Adapter_MongoDB
         if (!array_key_exists('port', $config)) {
             throw new Zend_Db_Adapter_MongoDB_Exception("Configuration array must have a key for 'port'");
         }
+    }
+
+    /** Abstract methods implementations **/
+
+    public function listTables() {
+
+    }
+
+    public function describeTable($tableName, $schemaName = null) {
+
+    }
+
+    protected function _connect() {
+
+    }
+
+    public function isConnected() {
+
+    }
+
+    public function closeConnection() {
+
+    }
+
+    public function prepare($sql) {
+
+    }
+
+    public function lastInsertId($tableName = null, $primaryKey = null) {
+
+    }
+
+    protected function _beginTransaction() {
+
+    }
+
+    protected function _commit() {
+
+    }
+
+    protected function _rollBack() {
+
+    }
+
+    public function setFetchMode($mode) {
+
+    }
+
+    public function limit($sql, $count, $offset = 0) {
+
+    }
+
+    public function supportsParameters($type) {
+
+    }
+
+    public function getServerVersion() {
+
     }
 }

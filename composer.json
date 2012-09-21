@@ -15,8 +15,9 @@
     },
     "autoload": {
         "psr-0": {
-            "Zend_Db_Adapter_": "src/"
+            "Zend_Db_Adapter_": "src/",
+            "Zend_": "lib/"
         }
     },
-    "include-path": ["lib"]
+    "include-path": ["lib", "src"]
 }
