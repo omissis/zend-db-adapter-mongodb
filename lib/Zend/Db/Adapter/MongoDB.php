@@ -10,65 +10,89 @@
  */
 class Zend_Db_Adapter_MongoDB
 {
-    protected $_connOptions = array("connect" => FALSE,
-                                    "timeout" => 5000);
-    protected $_connection;
-    protected $_db;         //instance of MongoDB
-    protected $_dbname;     //name of the database
+    /**
+     * @var array
+     */
+    protected $_connOptions = array(
+        "connect" => FALSE,
+        "timeout" => 5000
+    );
 
-    public function __construct($config)
+    /**
+     * @var \Mongo
+     */
+    protected $_connection;
+
+    /**
+     * @var array
+     */
+    protected $_config;
+
+    /**
+     * @var \MongoDB
+     */
+    protected $_db;
+
+    public function __construct(array $config)
     {
-        /*
-         * Verify that adapter parameters are in an array.
-         */
-        if (!is_array($config)) {
-            /*
-             * Convert Zend_Config argument to a plain array.
-             */
-            if ($config instanceof Zend_Config) {
-                $config = $config->toArray();
-            } else {
-                throw new Zend_Db_Adapter_MongoDB_Exception('Adapter parameters must be in an array or a Zend_Config object');
-            }
-        }
         $this->_checkRequiredOptions($config);
 
-        $login = !empty($config["username"]) && !empty($config["password"]) ? "{$config["username"]}:{$config["password"]}" : "";
-        $host = $this->_buildHostString($config["host"]);
-        $db = $config["dbname"];
-        try {
-            if (!empty($config["persists"])) {
-                //mongodb uses this value as a connection ID. If you want to create a new persistent connection
-                //for each instance, make a code to generate these strings.
-                $this->_connOptions["persists"] = $config["persists"];
-            }
-            $mongo = new Mongo("$login$host/$db", $this->_connOptions);
-            $this->_connection = $mongo;
-            $this->_dbname = $db;
+        $this->_config = $config;
+
+        $host = 'mongodb://' . $config['host']['hostname'] . ':' . $config['host']['port'];
+
+        if (!empty($config["username"])) {
+            $this->_connOptions["username"] = $config["username"];
         }
-        catch (Exception $e) {
-            throw new Zend_Db_Adapter_MongoDB_Exception("Adapter cannot make a mongodb connection. {$e->getMessage()}");
+
+        if (!empty($config["password"])) {
+            $this->_connOptions["password"] = $config["password"];
         }
+
+        $this->_connection = new Mongo($host . '/' . $config["dbname"], $this->_connOptions);
+
         return $this->_connection;
+    }
+
+    public function getDbName()
+    {
+        return $this->_config['dbname'];
+    }
+
+    public function getPassword()
+    {
+        return $this->_config['password'];
+    }
+
+    public function getUsername()
+    {
+        return $this->_config['username'];
+    }
+
+    public function getHost()
+    {
+        return $this->_config['host'];
     }
 
     public function getConnection()
     {
-//        if ($this->_connOptions["connect"] == FALSE && !is_object($this->_connection)) {
         if ($this->_connOptions["connect"] == FALSE) {
             $this->_connection->connect();
         }
+
         return $this->_connection;
     }
 
     public function setUpDatabase($db = null)
     {
         $conn = $this->getConnection();
+
         if ($db !== null) {
-            $this->_dbname = $db;
+            $this->_config['dbname'] = $db;
         }
-//        $this->_db = $conn->selectDB($this->_dbname);
-        $this->_db = $conn->{$this->_dbname};
+
+        $this->_db = $conn->selectDB($this->getDbName());
+
         return $this->_db;
     }
 
@@ -85,33 +109,14 @@ class Zend_Db_Adapter_MongoDB
     public function __call($fn, $args)
     {
         if (empty($this->_db)) {
-            $this->setUpDatabase($this->_dbname);
+            throw new Zend_Db_Adapter_MongoDB_Exception("MongoDB Connection not initialized");
         }
-        if (method_exists($this->_db, $fn)) {
-            $result = call_user_func_array(array($this->_db, $fn), $args);
-        } else {
-            throw new Exception("MongoDB::{$fn} Method not found");
-        }
-        return $result;
-    }
 
-    protected function _buildHostString($hosts)
-    {
-        $base = "mongodb://";
-        if (count($hosts) > 0 && !array_key_exists('hostname', $hosts)) {
-            $mbase = "";
-            foreach ($hosts as $host) {
-                if ($base != "mongodb://") {
-                    $mbase .= ",";
-                }
-                $mbase .= "{$host["hostname"]}:{$host["port"]}";
-                $base .= $mbase;
-                $mbase = "";
-            }
-        } else {
-            $base .= "{$hosts["hostname"]}:{$hosts["port"]}";
+        if (method_exists($this->_db, $fn)) {
+            return call_user_func_array(array($this->_db, $fn), $args);
         }
-        return $base;
+
+        throw new Zend_Db_Adapter_MongoDB_Exception("MongoDB::{$fn} Method not found");
     }
 
     protected function _checkRequiredOptions($config)
@@ -126,7 +131,13 @@ class Zend_Db_Adapter_MongoDB
             throw new Zend_Db_Adapter_MongoDB_Exception("Configuration array must have a key for 'username' for login credentials");
         }
         if (!array_key_exists('host', $config)) {
-            throw new Zend_Db_Adapter_MongoDB_Exception("Configuration array must have a key for 'host' for login credentials");
+            throw new Zend_Db_Adapter_MongoDB_Exception("Configuration array must have a key for 'host'");
+        }
+        if (!array_key_exists('hostname', $config['host'])) {
+            throw new Zend_Db_Adapter_MongoDB_Exception("Configuration array must have a key for 'host > hostname'");
+        }
+        if (!array_key_exists('port', $config['host'])) {
+            throw new Zend_Db_Adapter_MongoDB_Exception("Configuration array must have a key for 'host > port'");
         }
     }
 }
