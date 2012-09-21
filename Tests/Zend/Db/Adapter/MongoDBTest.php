@@ -11,7 +11,13 @@ class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
+        $adapter = $this->createAdapter();
 
+        $connection = $adapter->getConnection();
+
+        $db = $connection->selectDB($this->parameters['mongodb']['name']);
+
+        $db->drop();
     }
 
     /**
