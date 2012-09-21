@@ -75,21 +75,7 @@ class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Zend_Db_Adapter_Mongodb_Exception
-     * @expectedExceptionMessage Configuration array must have a key for 'host > hostname'
-     */
-    public function testInitWithoutHostHostname()
-    {
-        new Zend_Db_Adapter_MongoDB(array(
-            'dbname'   => $this->parameters['mongodb']['dbname'],
-            'password' => $this->parameters['mongodb']['password'],
-            'username' => $this->parameters['mongodb']['username'],
-            'host'     => array(),
-        ));
-    }
-
-    /**
-     * @expectedException Zend_Db_Adapter_Mongodb_Exception
-     * @expectedExceptionMessage Configuration array must have a key for 'host > port'
+     * @expectedExceptionMessage Configuration array must have a key for 'port'
      */
     public function testInitWithoutHostPort()
     {
@@ -97,9 +83,7 @@ class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
             'dbname'   => $this->parameters['mongodb']['dbname'],
             'password' => $this->parameters['mongodb']['password'],
             'username' => $this->parameters['mongodb']['username'],
-            'host'     => array(
-                'hostname' => $this->parameters['mongodb']['host'],
-            ),
+            'host'     => $this->parameters['mongodb']['host'],
         ));
     }
 
@@ -110,13 +94,8 @@ class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->parameters['mongodb']['dbname'], $adapter->getDbName());
         $this->assertSame($this->parameters['mongodb']['password'], $adapter->getPassword());
         $this->assertSame($this->parameters['mongodb']['username'], $adapter->getUsername());
-        $this->assertSame(
-            array(
-                'hostname' => $this->parameters['mongodb']['host'],
-                'port'     => $this->parameters['mongodb']['port'],
-            ),
-            $adapter->getHost()
-        );
+        $this->assertSame($this->parameters['mongodb']['host'], $adapter->getHost());
+        $this->assertSame($this->parameters['mongodb']['port'], $adapter->getPort());
     }
 
     public function testInitWithoWrongConfig()
@@ -125,22 +104,15 @@ class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
             'dbname'   => 'foo',
             'password' => 'bar',
             'username' => 'baz',
-            'host' => array(
-                'hostname' => 'quux',
-                'port' => 123,
-            ),
+            'host'     => 'quux',
+            'port'     => 123,
         ));
 
         $this->assertSame('foo', $adapter->getDbName());
         $this->assertSame('bar', $adapter->getPassword());
         $this->assertSame('baz', $adapter->getUsername());
-        $this->assertSame(
-            array(
-                'hostname' => 'quux',
-                'port'     => 123,
-            ),
-            $adapter->getHost()
-        );
+        $this->assertSame('quux', $adapter->getHost());
+        $this->assertSame(123, $adapter->getPort());
     }
 
     public function testGetMongoDBConnection()
@@ -208,10 +180,8 @@ class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
             'dbname'   => $this->parameters['mongodb']['dbname'],
             'password' => $this->parameters['mongodb']['password'],
             'username' => $this->parameters['mongodb']['username'],
-            'host'    => array(
-                'hostname' => $this->parameters['mongodb']['host'],
-                'port'     => $this->parameters['mongodb']['port'],
-            ),
+            'host'     => $this->parameters['mongodb']['host'],
+            'port'     => $this->parameters['mongodb']['port'],
         ));
     }
 }

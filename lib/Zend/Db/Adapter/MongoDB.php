@@ -39,7 +39,7 @@ class Zend_Db_Adapter_MongoDB
 
         $this->_config = $config;
 
-        $host = 'mongodb://' . $config['host']['hostname'] . ':' . $config['host']['port'];
+        $host = 'mongodb://' . $config['host'] . ':' . $config['port'];
 
         if (!empty($config["username"])) {
             $this->_connOptions["username"] = $config["username"];
@@ -72,6 +72,11 @@ class Zend_Db_Adapter_MongoDB
     public function getHost()
     {
         return $this->_config['host'];
+    }
+
+    public function getPort()
+    {
+        return $this->_config['port'];
     }
 
     public function getConnection()
@@ -133,11 +138,8 @@ class Zend_Db_Adapter_MongoDB
         if (!array_key_exists('host', $config)) {
             throw new Zend_Db_Adapter_MongoDB_Exception("Configuration array must have a key for 'host'");
         }
-        if (!array_key_exists('hostname', $config['host'])) {
-            throw new Zend_Db_Adapter_MongoDB_Exception("Configuration array must have a key for 'host > hostname'");
-        }
-        if (!array_key_exists('port', $config['host'])) {
-            throw new Zend_Db_Adapter_MongoDB_Exception("Configuration array must have a key for 'host > port'");
+        if (!array_key_exists('port', $config)) {
+            throw new Zend_Db_Adapter_MongoDB_Exception("Configuration array must have a key for 'port'");
         }
     }
 }
