@@ -1,5 +1,6 @@
 <?php
-class Db_Mongodb_Collection extends Db_Mongodb_Collection_Abstract
+
+class Zend_Db_Adapter_MongoDB_Collection extends Zend_Db_Adapter_MongoDB_Collection_Abstract
 {
     /**
      * A generic concrete class if you do not want to create individual models for each Mongodb collection.

@@ -1,0 +1,21 @@
+{
+    "name": "omissis/zend-db-adapter-mongodb",
+    "type": "library",
+    "description": "Zend Framework 1 Database Adapter for MongoDB",
+    "keywords": ["db", "database", "mongodb", "zend"],
+    "homepage": "http://www.silent-voice.org/",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Claudio Beatrice"
+        }
+    ],
+    "require": {
+        "php": ">=5.2.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Zend_Db_Adapter_": "lib/"
+        }
+    }
+}

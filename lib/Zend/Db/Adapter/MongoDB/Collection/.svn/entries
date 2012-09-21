@@ -2,7 +2,7 @@
 
 dir
 2
-http://zfdbmongodb.googlecode.com/svn/trunk/Mongodb
+http://zfdbmongodb.googlecode.com/svn/trunk/Mongodb/Collection
 http://zfdbmongodb.googlecode.com/svn
 
 
@@ -26,14 +26,14 @@ rumverse
 
 cf145c35-17d3-bd83-a6be-cc67472ca655
 
-Collection.php
+Documentset.php
 file
 
 
 
 
 2012-09-21T11:46:27.000000Z
-1b9e29650d648d55df42ccff98ae1114
+485048b778de365811a42227a5ef1c56
 2010-06-19T03:12:21.250519Z
 2
 rumverse
@@ -58,7 +58,7 @@ rumverse
 
 
 
-726
+10085
 
 Exception.php
 file
@@ -67,7 +67,7 @@ file
 
 
 2012-09-21T11:46:27.000000Z
-66bf94a64564a9ffacf0a407002f97af
+8494a8b84c71ab912283d3d5ce7921f9
 2010-06-19T03:12:21.250519Z
 2
 rumverse
@@ -92,16 +92,16 @@ rumverse
 
 
 
-56
+67
 
-Adapter.php
+Document.php
 file
 
 
 
 
 2012-09-21T11:46:27.000000Z
-906a0c77c4e35dfd80eb7f3156332cd7
+820d5044087190d6843efc53a37debc3
 2010-06-19T03:12:21.250519Z
 2
 rumverse
@@ -126,8 +126,39 @@ rumverse
 
 
 
-5237
+25482
 
-Collection
-dir
+Abstract.php
+file
+
+
+
+
+2012-09-21T11:46:27.000000Z
+89997b07f304249d8024a46082dc3d61
+2010-06-19T03:12:21.250519Z
+2
+rumverse
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+19316
 

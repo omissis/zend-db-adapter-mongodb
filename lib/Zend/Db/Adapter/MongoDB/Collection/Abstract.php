@@ -1,32 +1,31 @@
 <?php
-require_once 'Db/Mongodb/Adapter.php';
 
-abstract class Db_Mongodb_Collection_Abstract
+abstract class Zend_Db_Adapter_MongoDB_Collection_Abstract
 {
-    const ADAPTER                  = 'db';
-    const DATABASE                    = 'dbname';
+    const ADAPTER                   = 'db';
+    const DATABASE                  = 'dbname';
     const NAME                      = 'name';
     const PRIMARY                   = 'primary';
     const DOCUMENT_CLASS            = 'documentClass';
     const DOCUMENTSET_CLASS         = 'documentsetClass';
     const METADATA                  = 'metadata';
-    const COLS                       = 'columns';
+    const COLS                      = 'columns';
 
     const DEFAULT_NONE              = 'defaultNone';
     const DEFAULT_CLASS             = 'defaultClass';
     const DEFAULT_DB                = 'defaultDb';
 
     /**
-     * Default Db_Mongodb_Adapter object.
+     * Default Db_MongoDB_Adapter object.
      *
-     * @var Db_Mongodb_Adapter
+     * @var Db_MongoDB_Adapter
      */
     protected static $_defaultDb;
 
      /**
-     * Db_Mongodb_Adapter object.
+     * Db_MongoDB_Adapter object.
      *
-     * @var Db_Mongodb_Adapter
+     * @var Db_MongoDB_Adapter
      */
     protected $_db;
 
@@ -93,14 +92,14 @@ abstract class Db_Mongodb_Collection_Abstract
      *
      * @var string
      */
-    protected $_documentClass = 'Db_Mongodb_Collection_Document';
+    protected $_documentClass = 'Zend_Db_Adapter_MongoDB_Collection_Document';
 
     /**
      * Classname for Document set
      *
      * @var string
      */
-    protected $_documentsetClass = 'Db_Mongodb_Collection_Documentset';
+    protected $_documentsetClass = 'Zend_Db_Adapter_MongoDB_Collection_Documentset';
     protected $_defaultSource = self::DEFAULT_NONE;
     protected $_defaultValues = array();
 
@@ -136,8 +135,7 @@ abstract class Db_Mongodb_Collection_Abstract
             $par["password"] = !empty($config["password"]) ? $config["password"] : "";
             $par["host"]     = $config["host"];
 
-            require_once("Db/Mongodb/Adapter.php");
-            $this->_db = new Db_Mongodb_Adapter($par);
+            $this->_db = new Zend_Db_Adapter_MongoDB($par);
         }
 
         //always course through setting up the options
@@ -153,7 +151,7 @@ abstract class Db_Mongodb_Collection_Abstract
      * setOptions()
      *
      * @param array $options
-     * @return Db_Mongodb_Collection_Abstract
+     * @return Db_MongoDB_Collection_Abstract
      */
     public function setOptions(Array $options)
     {
@@ -187,7 +185,7 @@ abstract class Db_Mongodb_Collection_Abstract
 
     /**
      * @param  string $classname
-     * @return Db_Mongodb_Collection_Abstract Provides a fluent interface
+     * @return Db_MongoDB_Collection_Abstract Provides a fluent interface
      */
     public function setDocumentClass($classname)
     {
@@ -234,7 +232,7 @@ abstract class Db_Mongodb_Collection_Abstract
      * set the defaultSource property - this tells the collection class where to find default values
      *
      * @param string $defaultSource
-     * @return Db_Mongodb_Collection_Abstract
+     * @return Db_MongoDB_Collection_Abstract
      */
     public function setDefaultSource($defaultSource = self::DEFAULT_NONE)
     {
@@ -279,7 +277,7 @@ abstract class Db_Mongodb_Collection_Abstract
 
 
     /**
-     * Sets the default Db_Mongodb_Adapter for all Db_Mongodb_Collection objects.
+     * Sets the default Db_MongoDB_Adapter for all Db_MongoDB_Collection objects.
      *
      * @param  mixed $db Either an Adapter object, or a string naming a Registry key
      * @return void
@@ -290,9 +288,9 @@ abstract class Db_Mongodb_Collection_Abstract
     }
 
     /**
-     * Gets the default Db_Mongodb_Adapter for all Db_Mongodb_Collection objects.
+     * Gets the default Db_MongoDB_Adapter for all Db_MongoDB_Collection objects.
      *
-     * @return Db_Mongodb_Adapter or null
+     * @return Db_MongoDB_Adapter or null
      */
     public static function getDefaultAdapter()
     {
@@ -301,7 +299,7 @@ abstract class Db_Mongodb_Collection_Abstract
 
     /**
      * @param  mixed $db Either an Adapter object, or a string naming a Registry key
-     * @return Db_Mongodb_Adapter Provides a fluent interface
+     * @return Db_MongoDB_Adapter Provides a fluent interface
      */
     protected function _setAdapter($db)
     {
@@ -310,9 +308,9 @@ abstract class Db_Mongodb_Collection_Abstract
     }
 
     /**
-     * Gets the Db_Mongodb_Adapter for this particular Zend_Db_collection object.
+     * Gets the Db_MongoDB_Adapter for this particular Zend_Db_collection object.
      *
-     * @return Db_Mongodb_Adapter
+     * @return Db_MongoDB_Adapter
      */
     public function getAdapter()
     {
@@ -321,8 +319,8 @@ abstract class Db_Mongodb_Collection_Abstract
 
     /**
      * @param  mixed $db Either an Adapter object, or a string naming a Registry key
-     * @return Db_Mongodb_Adapter
-     * @throws Db_Mongodb_Collection_Exception
+     * @return Db_MongoDB_Adapter
+     * @throws Db_MongoDB_Collection_Exception
      */
     protected static function _setupAdapter($db)
     {
@@ -330,12 +328,10 @@ abstract class Db_Mongodb_Collection_Abstract
             return null;
         }
         if (is_string($db)) {
-            require_once 'Zend/Registry.php';
             $db = Zend_Registry::get($db);
         }
-        if (!$db instanceof Db_Mongodb_Adapter) {
-            require_once 'Db/Mongodb/Collection/Exception.php';
-            throw new Db_Mongodb_Collection_Exception('Argument must be of type Db_Mongodb_Adapter, or a Registry key where a Db_Mongodb_Adapter object is stored');
+        if (!$db instanceof Db_MongoDB_Adapter) {
+            throw new Zend_Db_Adapter_MongoDB_Collection_Exception('Argument must be of type Db_MongoDB_Adapter, or a Registry key where a Db_MongoDB_Adapter object is stored');
         }
         return $db;
     }
@@ -350,7 +346,7 @@ abstract class Db_Mongodb_Collection_Abstract
      *   Use this for natural keys, for example.
      *
      * @param mixed $sequence
-     * @return Db_Mongodb_Adapter Provides a fluent interface
+     * @return Db_MongoDB_Adapter Provides a fluent interface
      */
     protected function _setSequence($sequence)
     {
@@ -384,9 +380,8 @@ abstract class Db_Mongodb_Collection_Abstract
     {
         if (! $this->_db) {
             $this->_db = self::getDefaultAdapter();
-            if (!$this->_db instanceof Db_Mongodb_Adapter) {
-                require_once 'Db/Mongodb/Collection/Exception.php';
-                throw new Db_Mongodb_Collection_Exception('No adapter found for ' . get_class($this));
+            if (!$this->_db instanceof Db_MongoDB_Adapter) {
+                throw new Zend_Db_Adapter_MongoDB_Collection_Exception('No adapter found for ' . get_class($this));
             }
         }
     }
@@ -447,7 +442,7 @@ abstract class Db_Mongodb_Collection_Abstract
      * Initialize primary key from metadata.
      *
      * @return void
-     * @throws Db_Mongodb_Collection_Exception
+     * @throws Db_MongoDB_Collection_Exception
      */
     protected function _setupPrimaryKey()
     {
@@ -463,8 +458,7 @@ abstract class Db_Mongodb_Collection_Abstract
             // if no primary key was specified and none was found in the metadata
             // then throw an exception.
             if (empty($this->_primary)) {
-                require_once 'Db/Mongodb/Collection/Exception.php';
-                throw new Db_Mongodb_Collection_Exception('A collection must have a its Object ID or pseudo-primary key defined, but none was found');
+                throw new Zend_Db_Adapter_MongoDB_Collection_Exception('A collection must have a its Object ID or pseudo-primary key defined, but none was found');
             }
         } else if (!is_array($this->_primary)) {
             $this->_primary = array(1 => $this->_primary);
@@ -516,8 +510,7 @@ abstract class Db_Mongodb_Collection_Abstract
         }
 
         if (!array_key_exists($key, $info)) {
-            require_once 'Db/Mongodb/Collection/Exception.php';
-            throw new Db_Mongodb_Collection_Exception('There is no collection information for the key "' . $key . '"');
+            throw new Zend_Db_Adapter_MongoDB_Collection_Exception('There is no collection information for the key "' . $key . '"');
         }
 
         return $info[$key];
@@ -620,14 +613,13 @@ abstract class Db_Mongodb_Collection_Abstract
 
         $documentsetClass = $this->getDocumentsetClass();
         if (!class_exists($documentsetClass)) {
-            require_once 'Zend/Loader.php';
             Zend_Loader::loadClass($documentsetClass);
         }
         return new $documentsetClass($data);
     }
 
     /**
-     * Fetches one row in an object of type Db_Mongodb_Collection_Row
+     * Fetches one row in an object of type Db_MongoDB_Collection_Row
      * or returns null if no row matches the specified criteria.
      *
      */
@@ -650,7 +642,6 @@ abstract class Db_Mongodb_Collection_Abstract
 
         $documentClass = $this->getDocumentClass();
         if (!class_exists($documentClass)) {
-            require_once 'Zend/Loader.php';
             Zend_Loader::loadClass($documentClass);
         }
         return new $documentClass($data);

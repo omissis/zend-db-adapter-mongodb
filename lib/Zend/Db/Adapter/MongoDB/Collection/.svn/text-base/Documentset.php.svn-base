@@ -96,12 +96,12 @@ class Db_Mongodb_Collection_Documentset implements SeekableIterator, Countable, 
         if (isset($config['stored'])) {
             $this->_stored     = $config['stored'];
         }
-
+		
         // set the count of rows
          if (isset($config['count'])) {
             $this->_count = $config['count'];
         } else {
-            $this->_count = count($this->_data);
+        	$this->_count = count($this->_data);
         }
 
         $this->init();
@@ -226,9 +226,9 @@ class Db_Mongodb_Collection_Documentset implements SeekableIterator, Countable, 
             $this->_documents[$this->_pointer] = new $this->_documentClass(
                 array(
                     'collection'    => $this->_collection,
-                    'data'             => $this->_data[$this->_pointer],
-                    'stored'           => $this->_stored,
-                    'readOnly'         => $this->_readOnly
+                    'data'     		=> $this->_data[$this->_pointer],
+                    'stored'   		=> $this->_stored,
+                    'readOnly' 		=> $this->_readOnly
                 )
             );
         }

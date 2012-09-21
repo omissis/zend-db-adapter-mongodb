@@ -8,15 +8,15 @@
  * You will need to read the API documentation for MongoDB and Mongo PHP objects because most of
  * the operations are used as is. *
  */
-class Db_Mongodb_Adapter
+class Zend_Db_Adapter_MongoDB
 {
     protected $_connOptions = array("connect" => FALSE,
                                     "timeout" => 5000);
     protected $_connection;
-    protected $_db; //instance of MongoDB
-    protected $_dbname; //name of the database
+    protected $_db;         //instance of MongoDB
+    protected $_dbname;     //name of the database
 
-    public function __construct(array $config)
+    public function __construct($config)
     {
         /*
          * Verify that adapter parameters are in an array.
@@ -28,9 +28,7 @@ class Db_Mongodb_Adapter
             if ($config instanceof Zend_Config) {
                 $config = $config->toArray();
             } else {
-                /** @see Db_Mongodb_Exception */
-                require_once 'Db/Mongodb/Exception.php';
-                throw new Db_Mongodb_Exception('Adapter parameters must be in an array or a Zend_Config object');
+                throw new Zend_Db_Adapter_MongoDB_Exception('Adapter parameters must be in an array or a Zend_Config object');
             }
         }
         $this->_checkRequiredOptions($config);
@@ -49,12 +47,11 @@ class Db_Mongodb_Adapter
             $this->_dbname = $db;
         }
         catch (Exception $e) {
-            /** @see Db_Mongodb_Exception */
-            require_once 'Db/Mongodb/Exception.php';
-            throw new Db_Mongodb_Exception("Adapter cannot make a mongodb connection. {$e->getMessage()}");
+            throw new Zend_Db_Adapter_MongoDB_Exception("Adapter cannot make a mongodb connection. {$e->getMessage()}");
         }
         return $this->_connection;
     }
+
     public function getConnection()
     {
 //        if ($this->_connOptions["connect"] == FALSE && !is_object($this->_connection)) {
@@ -63,6 +60,7 @@ class Db_Mongodb_Adapter
         }
         return $this->_connection;
     }
+
     public function setUpDatabase($db = null)
     {
         $conn = $this->getConnection();
@@ -78,10 +76,12 @@ class Db_Mongodb_Adapter
     {
         return $this->_db;
     }
+
     public function query($query)
     {
         return $this->_db->execute($query);
     }
+
     public function __call($fn, $args)
     {
         if (empty($this->_db)) {
@@ -94,6 +94,7 @@ class Db_Mongodb_Adapter
         }
         return $result;
     }
+
     protected function _buildHostString($hosts)
     {
         $base = "mongodb://";
@@ -112,39 +113,20 @@ class Db_Mongodb_Adapter
         }
         return $base;
     }
+
     protected function _checkRequiredOptions($config)
     {
-        if (! array_key_exists('dbname', $config)) {
-            /** @see Zend_Db_Adapter_Exception */
-            require_once 'Db/Mongodb/Exception.php';
-            throw new Db_Mongodb_Exception("Configuration array must have a key for 'dbname' that names the database instance");
+        if (!array_key_exists('dbname', $config)) {
+            throw new Zend_Db_Adapter_MongoDB_Exception("Configuration array must have a key for 'dbname' that names the database instance");
         }
-
-        if (! array_key_exists('password', $config)) {
-            /** @see Db_Mongodb_Exception */
-            require_once 'Db/Mongodb/Exception.php';
-            throw new Db_Mongodb_Exception("Configuration array must have a key for 'password' for login credentials");
+        if (!array_key_exists('password', $config)) {
+            throw new Zend_Db_Adapter_MongoDB_Exception("Configuration array must have a key for 'password' for login credentials");
         }
-        if (! array_key_exists('username', $config)) {
-            /** @see Db_Mongodb_Exception */
-            require_once 'Db/Mongodb/Exception.php';
-            throw new Db_Mongodb_Exception("Configuration array must have a key for 'username' for login credentials");
+        if (!array_key_exists('username', $config)) {
+            throw new Zend_Db_Adapter_MongoDB_Exception("Configuration array must have a key for 'username' for login credentials");
         }
-        if (! array_key_exists('host', $config)) {
-            /** @see Db_Mongodb_Exception */
-            require_once 'Db/Mongodb/Exception.php';
-            throw new Db_Mongodb_Exception("Configuration array must have a key for 'host' for login credentials");
+        if (!array_key_exists('host', $config)) {
+            throw new Zend_Db_Adapter_MongoDB_Exception("Configuration array must have a key for 'host' for login credentials");
         }
     }
 }
-//set_include_path("../../../library");
-//$config["dbname"] = "test";
-//$config["username"] = "";
-//$config["password"] = "";
-//$config["host"]    = array("hostname"=>"localhost","port"=>27017);
-//
-//require_once("Zend/Loader/Autoloader.php");
-//$autoload = Zend_Loader_Autoloader::getInstance();
-//
-//$mongo = new Db_Mongodb_Adapter($config);
-//print_r($mongo->listCollections());
