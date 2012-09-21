@@ -57,6 +57,8 @@ class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
 
         $this->_connection = new Mongo($host . '/' . $config["dbname"], $this->_connOptions);
 
+        $this->setUpDatabase();
+
         return $this->_connection;
     }
 

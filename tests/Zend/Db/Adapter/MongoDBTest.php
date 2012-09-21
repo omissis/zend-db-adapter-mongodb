@@ -98,6 +98,10 @@ class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->parameters['mongodb']['port'], $adapter->getPort());
     }
 
+    /**
+     * @expectedException MongoConnectionException
+     * @expectedExceptionMessage couldn't get host info for quux
+     */
     public function testInitWithoWrongConfig()
     {
         $adapter = new Zend_Db_Adapter_MongoDB(array(
@@ -126,22 +130,9 @@ class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\MongoDB', $adapter->setUpDatabase('foobar'));
     }
 
-    /**
-     * @expectedException Zend_Db_Adapter_MongoDB_Exception
-     * @expectedExceptionMessage MongoDB Connection not initialized
-     */
     public function testMagicMethodCallWithoutDBInit()
     {
         $adapter = $this->createAdapter();
-
-        $this->assertInternalType('array', $adapter->listCollections());
-    }
-
-    public function testMagicMethodCallWithDBInit()
-    {
-        $adapter = $this->createAdapter();
-
-        $adapter->setUpDatabase();
 
         $this->assertInternalType('array', $adapter->listCollections());
     }
@@ -154,16 +145,12 @@ class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
     {
         $adapter = $this->createAdapter();
 
-        $adapter->setUpDatabase();
-
         $this->assertInternalType('array', $adapter->fooBar());
     }
 
     public function testQueryWithDBInit()
     {
         $adapter = $this->createAdapter();
-
-        $adapter->setUpDatabase();
 
         $results = $adapter->query('return db.foo.count();');
 
