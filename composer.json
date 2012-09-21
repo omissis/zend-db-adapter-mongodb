@@ -17,5 +17,6 @@
         "psr-0": {
             "Zend_Db_Adapter_": "src/"
         }
-    }
+    },
+    "include-path": ["lib"]
 }
