@@ -3,3 +3,4 @@ report/
 vendor/
 logs/
 composer.lock
+parameters.ini
