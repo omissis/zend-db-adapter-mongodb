@@ -125,7 +125,7 @@ class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('\Mongo', $adapter->getConnection());
         $this->assertInstanceOf('\MongoDB', $adapter->setUpDatabase());
-        $this->assertInstanceOf('\MongoDB', $adapter->getAdapter());
+        $this->assertInstanceOf('\MongoDB', $adapter->getMongoDB());
 
         $this->assertInstanceOf('\MongoDB', $adapter->setUpDatabase('foobar'));
     }

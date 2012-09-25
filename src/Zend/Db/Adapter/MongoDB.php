@@ -100,7 +100,7 @@ class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
         return $this->_db;
     }
 
-    public function getAdapter()
+    public function getMongoDB()
     {
         return $this->_db;
     }
