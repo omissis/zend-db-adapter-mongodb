@@ -191,7 +191,7 @@ class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
     }
 
     public function prepare($sql) {
-        throw new Exception("Cannot prepare statements in MongoDB");
+        throw new Zend_Db_Adapter_MongoDB_Exception("Cannot prepare statements in MongoDB");
     }
 
     public function lastInsertId($tableName = null, $primaryKey = null) {
