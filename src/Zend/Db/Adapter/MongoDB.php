@@ -199,15 +199,15 @@ class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
     }
 
     protected function _beginTransaction() {
-        throw new Exception("There are no transactions in MongoDB");
+        throw new Zend_Db_Adapter_MongoDB_Exception("There are no transactions in MongoDB");
     }
 
     protected function _commit() {
-        throw new Exception("There are no commits(ie: transactions) in MongoDB");
+        throw new Zend_Db_Adapter_MongoDB_Exception("There are no commits(ie: transactions) in MongoDB");
     }
 
     protected function _rollBack() {
-        throw new Exception("There are no rollbacks(ie: transactions) in MongoDB");
+        throw new Zend_Db_Adapter_MongoDB_Exception("There are no rollbacks(ie: transactions) in MongoDB");
     }
 
     /**
