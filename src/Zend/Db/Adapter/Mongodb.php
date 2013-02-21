@@ -13,10 +13,15 @@ class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
     /**
      * @var array
      */
-    protected $_connOptions = array(
-        "connect" => FALSE,
-        "timeout" => 5000
+    protected $_options = array(
+        "connect" => true,
+        "timeout" => 5000,
     );
+
+    /**
+     * @var string
+     */
+    protected $_serverClass;
 
     /**
      * @var \Mongo
@@ -47,15 +52,15 @@ class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
 
         $host = 'mongodb://' . $config['host'] . ':' . $config['port'];
 
-        if (!empty($config["username"])) {
-            $this->_connOptions["username"] = $config["username"];
+        $this->_options = array_merge($this->_options, $config);
+
+        if (class_exists('\MongoClient')) {
+            $this->_serverClass = '\MongoClient';
+        } else {
+            $this->_serverClass = '\Mongo';
         }
 
-        if (!empty($config["password"])) {
-            $this->_connOptions["password"] = $config["password"];
-        }
-
-        $this->_connection = new Mongo($host . '/' . $config["dbname"], $this->_connOptions);
+        $this->_connection = new $this->_serverClass($host . '/' . $config["dbname"], $this->_options);
 
         $this->setUpDatabase();
 
@@ -126,19 +131,29 @@ class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
     protected function _checkRequiredOptions(array $config)
     {
         if (!array_key_exists('dbname', $config)) {
-            throw new Zend_Db_Adapter_MongoDB_Exception("Configuration array must have a key for 'dbname' that names the database instance");
+            throw new Zend_Db_Adapter_MongoDB_Exception(
+                "Configuration array must have a key for 'dbname' that names the database instance"
+            );
         }
         if (!array_key_exists('password', $config)) {
-            throw new Zend_Db_Adapter_MongoDB_Exception("Configuration array must have a key for 'password' for login credentials");
+            throw new Zend_Db_Adapter_MongoDB_Exception(
+                "Configuration array must have a key for 'password' for login credentials"
+            );
         }
         if (!array_key_exists('username', $config)) {
-            throw new Zend_Db_Adapter_MongoDB_Exception("Configuration array must have a key for 'username' for login credentials");
+            throw new Zend_Db_Adapter_MongoDB_Exception(
+                "Configuration array must have a key for 'username' for login credentials"
+            );
         }
         if (!array_key_exists('host', $config)) {
-            throw new Zend_Db_Adapter_MongoDB_Exception("Configuration array must have a key for 'host'");
+            throw new Zend_Db_Adapter_MongoDB_Exception(
+                "Configuration array must have a key for 'host'"
+            );
         }
         if (!array_key_exists('port', $config)) {
-            throw new Zend_Db_Adapter_MongoDB_Exception("Configuration array must have a key for 'port'");
+            throw new Zend_Db_Adapter_MongoDB_Exception(
+                "Configuration array must have a key for 'port'"
+            );
         }
     }
 
@@ -149,29 +164,33 @@ class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
      *
      * @return array
      */
-    public function listTables() {
+    public function listTables()
+    {
         return $this->_db->listCollections();
     }
 
     /**
      * @see self::listTables()
      */
-    public function listCollections() {
+    public function listCollections()
+    {
         return $this->listTables();
     }
 
     /**
      * @todo improve
      */
-    public function describeTable($tableName, $schemaName = null) {
-        return array();
+    public function describeTable($tableName, $schemaName = null)
+    {
+        throw new Zend_Db_Adapter_MongoDB_Exception("Not implemented yet");
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function _connect() {
-        if ($this->_connOptions["connect"] == FALSE) {
+    protected function _connect()
+    {
+        if ($this->_options["connect"] == false) {
             $this->_connection->connect();
         }
     }
@@ -179,62 +198,77 @@ class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
     /**
      * {@inheritdoc}
      */
-    public function isConnected() {
+    public function isConnected()
+    {
         return $this->_connection->connected;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function closeConnection() {
+    public function closeConnection()
+    {
         return $this->_connection->close();
     }
 
-    public function prepare($sql) {
+    public function prepare($sql)
+    {
         throw new Zend_Db_Adapter_MongoDB_Exception("Cannot prepare statements in MongoDB");
     }
 
-    public function lastInsertId($tableName = null, $primaryKey = null) {
-        return null;
+    public function lastInsertId($tableName = null, $primaryKey = null)
+    {
+        throw new Zend_Db_Adapter_MongoDB_Exception("Not implemented yet");
     }
 
-    protected function _beginTransaction() {
+    protected function _beginTransaction()
+    {
         throw new Zend_Db_Adapter_MongoDB_Exception("There are no transactions in MongoDB");
     }
 
-    protected function _commit() {
+    protected function _commit()
+    {
         throw new Zend_Db_Adapter_MongoDB_Exception("There are no commits(ie: transactions) in MongoDB");
     }
 
-    protected function _rollBack() {
+    protected function _rollBack()
+    {
         throw new Zend_Db_Adapter_MongoDB_Exception("There are no rollbacks(ie: transactions) in MongoDB");
     }
 
     /**
      * @todo improve
      */
-    public function setFetchMode($mode) {
-
+    public function setFetchMode($mode)
+    {
+        throw new Zend_Db_Adapter_MongoDB_Exception("Not implemented yet");
     }
 
     /**
      * @todo improve
      */
-    public function limit($sql, $count, $offset = 0) {
-
+    public function limit($sql, $count, $offset = 0)
+    {
+        throw new Zend_Db_Adapter_MongoDB_Exception("Not implemented yet");
     }
 
     /**
      * @todo improve
      */
-    public function supportsParameters($type) {
+    public function supportsParameters($type)
+    {
         return false;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getServerVersion() {
+    public function getServerVersion()
+    {
+        if ($this->_serverClass === '\MongoClient') {
+            return \MongoClient::VERSION;
+        }
+
         return \Mongo::VERSION;
     }
 }
