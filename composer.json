@@ -13,6 +13,9 @@
     "require": {
         "php": ">=5.2.0"
     },
+    "require-dev": {
+        "symfony/yaml": "2.1.*"
+    },
     "autoload": {
         "psr-0": {
             "Zend_Db_Adapter_": "src/",
