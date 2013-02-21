@@ -50,7 +50,15 @@ class Zend_Db_Adapter_Mongodb extends Zend_Db_Adapter_Abstract
 
         $this->_config = $config;
 
+        // Remove from the config array the unexisting Mongo/MongoClient config keys in order to avoid notices
         $host = 'mongodb://' . $config['host'] . ':' . $config['port'];
+        unset($config['host'], $config['port']);
+
+        foreach ($config as $key => $value) {
+            if (empty($value)) {
+                unset($config[$key]);
+            }
+        }
 
         $this->_options = array_merge($this->_options, $config);
 
@@ -60,7 +68,7 @@ class Zend_Db_Adapter_Mongodb extends Zend_Db_Adapter_Abstract
             $this->_serverClass = '\Mongo';
         }
 
-        $this->_connection = new $this->_serverClass($host . '/' . $config["dbname"], $this->_options);
+        $this->_connection = new $this->_serverClass($host, $this->_options);
 
         $this->setUpDatabase();
 
@@ -69,7 +77,7 @@ class Zend_Db_Adapter_Mongodb extends Zend_Db_Adapter_Abstract
 
     public function getDbName()
     {
-        return $this->_config['dbname'];
+        return $this->_config['db'];
     }
 
     public function getPassword()
@@ -97,7 +105,7 @@ class Zend_Db_Adapter_Mongodb extends Zend_Db_Adapter_Abstract
         $conn = $this->getConnection();
 
         if ($db !== null) {
-            $this->_config['dbname'] = $db;
+            $this->_config['db'] = $db;
         }
 
         $this->_db = $conn->selectDB($this->getDbName());
@@ -130,9 +138,9 @@ class Zend_Db_Adapter_Mongodb extends Zend_Db_Adapter_Abstract
 
     protected function _checkRequiredOptions(array $config)
     {
-        if (!array_key_exists('dbname', $config)) {
+        if (!array_key_exists('db', $config)) {
             throw new Zend_Db_Adapter_Mongodb_Exception(
-                "Configuration array must have a key for 'dbname' that names the database instance"
+                "Configuration array must have a key for 'db' that names the database instance"
             );
         }
         if (!array_key_exists('password', $config)) {

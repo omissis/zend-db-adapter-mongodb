@@ -15,7 +15,7 @@ class Zend_Db_Adapter_MongodbTest extends \PHPUnit_Framework_TestCase
 
         $connection = $adapter->getConnection();
 
-        $db = $connection->selectDB($this->parameters['mongodb']['dbname']);
+        $db = $connection->selectDB($this->parameters['mongodb']['db']);
 
         $db->drop();
     }
@@ -30,7 +30,7 @@ class Zend_Db_Adapter_MongodbTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Zend_Db_Adapter_Mongodb_Exception
-     * @expectedExceptionMessage Configuration array must have a key for 'dbname' that names the database instance
+     * @expectedExceptionMessage Configuration array must have a key for 'db' that names the database instance
      */
     public function testInitWithoutDbName()
     {
@@ -44,7 +44,7 @@ class Zend_Db_Adapter_MongodbTest extends \PHPUnit_Framework_TestCase
     public function testInitWithoutPassword()
     {
         new Zend_Db_Adapter_Mongodb(array(
-            'dbname' => $this->parameters['mongodb']['dbname'],
+            'db' => $this->parameters['mongodb']['db'],
         ));
     }
 
@@ -55,7 +55,7 @@ class Zend_Db_Adapter_MongodbTest extends \PHPUnit_Framework_TestCase
     public function testInitWithoutUsername()
     {
         new Zend_Db_Adapter_Mongodb(array(
-            'dbname'   => $this->parameters['mongodb']['dbname'],
+            'db'   => $this->parameters['mongodb']['db'],
             'password' => $this->parameters['mongodb']['password'],
         ));
     }
@@ -67,7 +67,7 @@ class Zend_Db_Adapter_MongodbTest extends \PHPUnit_Framework_TestCase
     public function testInitWithoutHost()
     {
         new Zend_Db_Adapter_Mongodb(array(
-            'dbname'   => $this->parameters['mongodb']['dbname'],
+            'db'   => $this->parameters['mongodb']['db'],
             'password' => $this->parameters['mongodb']['password'],
             'username' => $this->parameters['mongodb']['username'],
         ));
@@ -80,7 +80,7 @@ class Zend_Db_Adapter_MongodbTest extends \PHPUnit_Framework_TestCase
     public function testInitWithoutHostPort()
     {
         new Zend_Db_Adapter_Mongodb(array(
-            'dbname'   => $this->parameters['mongodb']['dbname'],
+            'db'   => $this->parameters['mongodb']['db'],
             'password' => $this->parameters['mongodb']['password'],
             'username' => $this->parameters['mongodb']['username'],
             'host'     => $this->parameters['mongodb']['host'],
@@ -91,7 +91,7 @@ class Zend_Db_Adapter_MongodbTest extends \PHPUnit_Framework_TestCase
     {
         $adapter = $this->createAdapter();
 
-        $this->assertSame($this->parameters['mongodb']['dbname'], $adapter->getDbName());
+        $this->assertSame($this->parameters['mongodb']['db'], $adapter->getDbName());
         $this->assertSame($this->parameters['mongodb']['password'], $adapter->getPassword());
         $this->assertSame($this->parameters['mongodb']['username'], $adapter->getUsername());
         $this->assertSame($this->parameters['mongodb']['host'], $adapter->getHost());
@@ -100,12 +100,12 @@ class Zend_Db_Adapter_MongodbTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException MongoConnectionException
-     * @expectedExceptionMessage couldn't get host info for quux
+     * @expectedExceptionMessage Couldn't get host info for quux
      */
     public function testInitWithoWrongConfig()
     {
         $adapter = new Zend_Db_Adapter_Mongodb(array(
-            'dbname'   => 'foo',
+            'db'   => 'foo',
             'password' => 'bar',
             'username' => 'baz',
             'host'     => 'quux',
@@ -168,7 +168,7 @@ class Zend_Db_Adapter_MongodbTest extends \PHPUnit_Framework_TestCase
     protected function createAdapter()
     {
         return new Zend_Db_Adapter_Mongodb(array(
-            'dbname'   => $this->parameters['mongodb']['dbname'],
+            'db'   => $this->parameters['mongodb']['db'],
             'password' => $this->parameters['mongodb']['password'],
             'username' => $this->parameters['mongodb']['username'],
             'host'     => $this->parameters['mongodb']['host'],

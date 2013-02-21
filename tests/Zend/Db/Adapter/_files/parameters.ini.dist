@@ -1,6 +1,6 @@
 [mongodb]
 host=localhost
 port=27017
-dbname=zend_db_adapter_mongodb_test
-username=null
-password=null
+db=zend_db_adapter_mongodb_test
+username=
+password=
