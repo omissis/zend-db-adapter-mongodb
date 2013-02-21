@@ -1,6 +1,6 @@
 <?php
 
-class Zend_Db_Adapter_MongoDB_Exception extends Exception
+class Zend_Db_Adapter_Mongodb_Exception extends Exception
 {
 
 }

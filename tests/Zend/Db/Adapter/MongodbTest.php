@@ -1,6 +1,6 @@
 <?php
 
-class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
+class Zend_Db_Adapter_MongodbTest extends \PHPUnit_Framework_TestCase
 {
     protected $parameters = array();
 
@@ -25,7 +25,7 @@ class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
      */
     public function testInitWithoutArray()
     {
-        new Zend_Db_Adapter_MongoDB(null);
+        new Zend_Db_Adapter_Mongodb(null);
     }
 
     /**
@@ -34,7 +34,7 @@ class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
      */
     public function testInitWithoutDbName()
     {
-        new Zend_Db_Adapter_MongoDB(array());
+        new Zend_Db_Adapter_Mongodb(array());
     }
 
     /**
@@ -43,7 +43,7 @@ class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
      */
     public function testInitWithoutPassword()
     {
-        new Zend_Db_Adapter_MongoDB(array(
+        new Zend_Db_Adapter_Mongodb(array(
             'dbname' => $this->parameters['mongodb']['dbname'],
         ));
     }
@@ -54,7 +54,7 @@ class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
      */
     public function testInitWithoutUsername()
     {
-        new Zend_Db_Adapter_MongoDB(array(
+        new Zend_Db_Adapter_Mongodb(array(
             'dbname'   => $this->parameters['mongodb']['dbname'],
             'password' => $this->parameters['mongodb']['password'],
         ));
@@ -66,7 +66,7 @@ class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
      */
     public function testInitWithoutHost()
     {
-        new Zend_Db_Adapter_MongoDB(array(
+        new Zend_Db_Adapter_Mongodb(array(
             'dbname'   => $this->parameters['mongodb']['dbname'],
             'password' => $this->parameters['mongodb']['password'],
             'username' => $this->parameters['mongodb']['username'],
@@ -79,7 +79,7 @@ class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
      */
     public function testInitWithoutHostPort()
     {
-        new Zend_Db_Adapter_MongoDB(array(
+        new Zend_Db_Adapter_Mongodb(array(
             'dbname'   => $this->parameters['mongodb']['dbname'],
             'password' => $this->parameters['mongodb']['password'],
             'username' => $this->parameters['mongodb']['username'],
@@ -104,7 +104,7 @@ class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
      */
     public function testInitWithoWrongConfig()
     {
-        $adapter = new Zend_Db_Adapter_MongoDB(array(
+        $adapter = new Zend_Db_Adapter_Mongodb(array(
             'dbname'   => 'foo',
             'password' => 'bar',
             'username' => 'baz',
@@ -123,7 +123,11 @@ class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
     {
         $adapter = $this->createAdapter();
 
-        $this->assertInstanceOf('\Mongo', $adapter->getConnection());
+        if (class_exists('\MongoClient')) {
+            $this->assertInstanceOf('\MongoClient', $adapter->getConnection());
+        } else {
+            $this->assertInstanceOf('\Mongo', $adapter->getConnection());
+        }
         $this->assertInstanceOf('\MongoDB', $adapter->setUpDatabase());
         $this->assertInstanceOf('\MongoDB', $adapter->getMongoDB());
 
@@ -138,7 +142,7 @@ class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Zend_Db_Adapter_MongoDB_Exception
+     * @expectedException Zend_Db_Adapter_Mongodb_Exception
      * @expectedExceptionMessage MongoDB::fooBar Method not found
      */
     public function testMagicMethodCallWithDBInitAndWrongMethod()
@@ -163,7 +167,7 @@ class Zend_Db_Adapter_MongoDBTest extends \PHPUnit_Framework_TestCase
 
     protected function createAdapter()
     {
-        return new Zend_Db_Adapter_MongoDB(array(
+        return new Zend_Db_Adapter_Mongodb(array(
             'dbname'   => $this->parameters['mongodb']['dbname'],
             'password' => $this->parameters['mongodb']['password'],
             'username' => $this->parameters['mongodb']['username'],

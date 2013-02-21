@@ -8,7 +8,7 @@
  * You will need to read the API documentation for MongoDB and Mongo PHP objects because most of
  * the operations are used as is. *
  */
-class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
+class Zend_Db_Adapter_Mongodb extends Zend_Db_Adapter_Abstract
 {
     /**
      * @var array
@@ -118,40 +118,40 @@ class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
     public function __call($fn, $args)
     {
         if (empty($this->_db)) {
-            throw new Zend_Db_Adapter_MongoDB_Exception("MongoDB Connection not initialized");
+            throw new Zend_Db_Adapter_Mongodb_Exception("MongoDB Connection not initialized");
         }
 
         if (method_exists($this->_db, $fn)) {
             return call_user_func_array(array($this->_db, $fn), $args);
         }
 
-        throw new Zend_Db_Adapter_MongoDB_Exception("MongoDB::{$fn} Method not found");
+        throw new Zend_Db_Adapter_Mongodb_Exception("MongoDB::{$fn} Method not found");
     }
 
     protected function _checkRequiredOptions(array $config)
     {
         if (!array_key_exists('dbname', $config)) {
-            throw new Zend_Db_Adapter_MongoDB_Exception(
+            throw new Zend_Db_Adapter_Mongodb_Exception(
                 "Configuration array must have a key for 'dbname' that names the database instance"
             );
         }
         if (!array_key_exists('password', $config)) {
-            throw new Zend_Db_Adapter_MongoDB_Exception(
+            throw new Zend_Db_Adapter_Mongodb_Exception(
                 "Configuration array must have a key for 'password' for login credentials"
             );
         }
         if (!array_key_exists('username', $config)) {
-            throw new Zend_Db_Adapter_MongoDB_Exception(
+            throw new Zend_Db_Adapter_Mongodb_Exception(
                 "Configuration array must have a key for 'username' for login credentials"
             );
         }
         if (!array_key_exists('host', $config)) {
-            throw new Zend_Db_Adapter_MongoDB_Exception(
+            throw new Zend_Db_Adapter_Mongodb_Exception(
                 "Configuration array must have a key for 'host'"
             );
         }
         if (!array_key_exists('port', $config)) {
-            throw new Zend_Db_Adapter_MongoDB_Exception(
+            throw new Zend_Db_Adapter_Mongodb_Exception(
                 "Configuration array must have a key for 'port'"
             );
         }
@@ -182,7 +182,7 @@ class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
      */
     public function describeTable($tableName, $schemaName = null)
     {
-        throw new Zend_Db_Adapter_MongoDB_Exception("Not implemented yet");
+        throw new Zend_Db_Adapter_Mongodb_Exception("Not implemented yet");
     }
 
     /**
@@ -213,27 +213,27 @@ class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
 
     public function prepare($sql)
     {
-        throw new Zend_Db_Adapter_MongoDB_Exception("Cannot prepare statements in MongoDB");
+        throw new Zend_Db_Adapter_Mongodb_Exception("Cannot prepare statements in MongoDB");
     }
 
     public function lastInsertId($tableName = null, $primaryKey = null)
     {
-        throw new Zend_Db_Adapter_MongoDB_Exception("Not implemented yet");
+        throw new Zend_Db_Adapter_Mongodb_Exception("Not implemented yet");
     }
 
     protected function _beginTransaction()
     {
-        throw new Zend_Db_Adapter_MongoDB_Exception("There are no transactions in MongoDB");
+        throw new Zend_Db_Adapter_Mongodb_Exception("There are no transactions in MongoDB");
     }
 
     protected function _commit()
     {
-        throw new Zend_Db_Adapter_MongoDB_Exception("There are no commits(ie: transactions) in MongoDB");
+        throw new Zend_Db_Adapter_Mongodb_Exception("There are no commits(ie: transactions) in MongoDB");
     }
 
     protected function _rollBack()
     {
-        throw new Zend_Db_Adapter_MongoDB_Exception("There are no rollbacks(ie: transactions) in MongoDB");
+        throw new Zend_Db_Adapter_Mongodb_Exception("There are no rollbacks(ie: transactions) in MongoDB");
     }
 
     /**
@@ -241,7 +241,7 @@ class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
      */
     public function setFetchMode($mode)
     {
-        throw new Zend_Db_Adapter_MongoDB_Exception("Not implemented yet");
+        throw new Zend_Db_Adapter_Mongodb_Exception("Not implemented yet");
     }
 
     /**
@@ -249,7 +249,7 @@ class Zend_Db_Adapter_MongoDB extends Zend_Db_Adapter_Abstract
      */
     public function limit($sql, $count, $offset = 0)
     {
-        throw new Zend_Db_Adapter_MongoDB_Exception("Not implemented yet");
+        throw new Zend_Db_Adapter_Mongodb_Exception("Not implemented yet");
     }
 
     /**
