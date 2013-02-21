@@ -15,9 +15,9 @@ class Zend_Db_Adapter_MongodbTest extends \PHPUnit_Framework_TestCase
 
         $connection = $adapter->getConnection();
 
-        $db = $connection->selectDB($this->parameters['mongodb']['db']);
+        $database = $connection->selectDB($this->parameters['mongodb']['dbname']);
 
-        $db->drop();
+        $database->drop();
     }
 
     /**
@@ -30,7 +30,7 @@ class Zend_Db_Adapter_MongodbTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Zend_Db_Adapter_Mongodb_Exception
-     * @expectedExceptionMessage Configuration array must have a key for 'db' that names the database instance
+     * @expectedExceptionMessage Configuration array must have a key for 'dbname' that names the database instance
      */
     public function testInitWithoutDbName()
     {
@@ -43,9 +43,11 @@ class Zend_Db_Adapter_MongodbTest extends \PHPUnit_Framework_TestCase
      */
     public function testInitWithoutPassword()
     {
-        new Zend_Db_Adapter_Mongodb(array(
-            'db' => $this->parameters['mongodb']['db'],
-        ));
+        new Zend_Db_Adapter_Mongodb(
+            array(
+                'dbname' => $this->parameters['mongodb']['dbname'],
+            )
+        );
     }
 
     /**
@@ -54,10 +56,12 @@ class Zend_Db_Adapter_MongodbTest extends \PHPUnit_Framework_TestCase
      */
     public function testInitWithoutUsername()
     {
-        new Zend_Db_Adapter_Mongodb(array(
-            'db'   => $this->parameters['mongodb']['db'],
-            'password' => $this->parameters['mongodb']['password'],
-        ));
+        new Zend_Db_Adapter_Mongodb(
+            array(
+                'dbname'   => $this->parameters['mongodb']['dbname'],
+                'password' => $this->parameters['mongodb']['password'],
+            )
+        );
     }
 
     /**
@@ -66,11 +70,13 @@ class Zend_Db_Adapter_MongodbTest extends \PHPUnit_Framework_TestCase
      */
     public function testInitWithoutHost()
     {
-        new Zend_Db_Adapter_Mongodb(array(
-            'db'   => $this->parameters['mongodb']['db'],
-            'password' => $this->parameters['mongodb']['password'],
-            'username' => $this->parameters['mongodb']['username'],
-        ));
+        new Zend_Db_Adapter_Mongodb(
+            array(
+                'dbname'   => $this->parameters['mongodb']['dbname'],
+                'password' => $this->parameters['mongodb']['password'],
+                'username' => $this->parameters['mongodb']['username'],
+            )
+        );
     }
 
     /**
@@ -79,19 +85,21 @@ class Zend_Db_Adapter_MongodbTest extends \PHPUnit_Framework_TestCase
      */
     public function testInitWithoutHostPort()
     {
-        new Zend_Db_Adapter_Mongodb(array(
-            'db'   => $this->parameters['mongodb']['db'],
-            'password' => $this->parameters['mongodb']['password'],
-            'username' => $this->parameters['mongodb']['username'],
-            'host'     => $this->parameters['mongodb']['host'],
-        ));
+        new Zend_Db_Adapter_Mongodb(
+            array(
+                'dbname'   => $this->parameters['mongodb']['dbname'],
+                'password' => $this->parameters['mongodb']['password'],
+                'username' => $this->parameters['mongodb']['username'],
+                'host'     => $this->parameters['mongodb']['host'],
+            )
+        );
     }
 
     public function testCompleteInit()
     {
         $adapter = $this->createAdapter();
 
-        $this->assertSame($this->parameters['mongodb']['db'], $adapter->getDbName());
+        $this->assertSame($this->parameters['mongodb']['dbname'], $adapter->getDbName());
         $this->assertSame($this->parameters['mongodb']['password'], $adapter->getPassword());
         $this->assertSame($this->parameters['mongodb']['username'], $adapter->getUsername());
         $this->assertSame($this->parameters['mongodb']['host'], $adapter->getHost());
@@ -104,13 +112,15 @@ class Zend_Db_Adapter_MongodbTest extends \PHPUnit_Framework_TestCase
      */
     public function testInitWithoWrongConfig()
     {
-        $adapter = new Zend_Db_Adapter_Mongodb(array(
-            'db'   => 'foo',
-            'password' => 'bar',
-            'username' => 'baz',
-            'host'     => 'quux',
-            'port'     => 123,
-        ));
+        $adapter = new Zend_Db_Adapter_Mongodb(
+            array(
+                'dbname'   => 'foo',
+                'password' => 'bar',
+                'username' => 'baz',
+                'host'     => 'quux',
+                'port'     => 123,
+            )
+        );
 
         $this->assertSame('foo', $adapter->getDbName());
         $this->assertSame('bar', $adapter->getPassword());
@@ -167,12 +177,14 @@ class Zend_Db_Adapter_MongodbTest extends \PHPUnit_Framework_TestCase
 
     protected function createAdapter()
     {
-        return new Zend_Db_Adapter_Mongodb(array(
-            'db'   => $this->parameters['mongodb']['db'],
-            'password' => $this->parameters['mongodb']['password'],
-            'username' => $this->parameters['mongodb']['username'],
-            'host'     => $this->parameters['mongodb']['host'],
-            'port'     => $this->parameters['mongodb']['port'],
-        ));
+        return new Zend_Db_Adapter_Mongodb(
+            array(
+                'dbname'   => $this->parameters['mongodb']['dbname'],
+                'password' => $this->parameters['mongodb']['password'],
+                'username' => $this->parameters['mongodb']['username'],
+                'host'     => $this->parameters['mongodb']['host'],
+                'port'     => $this->parameters['mongodb']['port'],
+            )
+        );
     }
 }

@@ -48,11 +48,9 @@ class Zend_Db_Adapter_Mongodb extends Zend_Db_Adapter_Abstract
     {
         $this->_checkRequiredOptions($config);
 
-        $this->_config = $config;
+        $config['db'] = $config['dbname'];
 
-        // Remove from the config array the unexisting Mongo/MongoClient config keys in order to avoid notices
-        $host = 'mongodb://' . $config['host'] . ':' . $config['port'];
-        unset($config['host'], $config['port']);
+        $this->_config = $config;
 
         foreach ($config as $key => $value) {
             if (empty($value)) {
@@ -60,15 +58,15 @@ class Zend_Db_Adapter_Mongodb extends Zend_Db_Adapter_Abstract
             }
         }
 
+        $this->_serverClass = class_exists('\MongoClient') ? '\MongoClient' : '\Mongo';
+
         $this->_options = array_merge($this->_options, $config);
+        unset($this->_options['host'], $this->_options['port'], $this->_options['dbname']);
 
-        if (class_exists('\MongoClient')) {
-            $this->_serverClass = '\MongoClient';
-        } else {
-            $this->_serverClass = '\Mongo';
-        }
-
-        $this->_connection = new $this->_serverClass($host, $this->_options);
+        $this->_connection = new $this->_serverClass(
+            'mongodb://' . $config['host'] . ':' . $config['port'],
+            $this->_options
+        );
 
         $this->setUpDatabase();
 
@@ -138,9 +136,9 @@ class Zend_Db_Adapter_Mongodb extends Zend_Db_Adapter_Abstract
 
     protected function _checkRequiredOptions(array $config)
     {
-        if (!array_key_exists('db', $config)) {
+        if (!array_key_exists('dbname', $config)) {
             throw new Zend_Db_Adapter_Mongodb_Exception(
-                "Configuration array must have a key for 'db' that names the database instance"
+                "Configuration array must have a key for 'dbname' that names the database instance"
             );
         }
         if (!array_key_exists('password', $config)) {
